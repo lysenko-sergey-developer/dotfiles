@@ -426,3 +426,16 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable arrows keys
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable arrows keys
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+inoremap <Esc> <Esc>:w<CR>
