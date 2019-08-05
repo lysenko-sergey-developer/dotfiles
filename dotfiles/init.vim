@@ -90,6 +90,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug '~/my-prototype-plugin'
 " Dracula Theme
 Plug 'dracula/vim', { 'as': 'dracula' }
+" Use release branch
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Ripgrep
+Plug 'jremmen/vim-ripgrep'
 
 " Initialize plugin system
 call plug#end()
