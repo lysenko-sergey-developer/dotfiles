@@ -92,8 +92,8 @@ Plug '~/my-prototype-plugin'
 Plug 'dracula/vim', { 'as': 'dracula' }
 " Use release branch
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Ripgrep
-Plug 'jremmen/vim-ripgrep'
+" All greps
+" Plug 'vim-scripts/grep.vim'
 
 " Initialize plugin system
 call plug#end()
@@ -104,7 +104,7 @@ call plug#end()
 set shell=/usr/bin/fish
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Set 7 lines to the cursor - when moving vertically using j/k
 set so=7
 
@@ -443,3 +443,15 @@ noremap <Right> <Nop>
 " Disable arrows keys
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 inoremap <Esc> <Esc>:w<CR>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FZF
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <C-p> :FZF<Cr>
+
+" Similarly, we can apply it to fzf#vim#grep. To use ripgrep instead of ag:
+command! -bang -nargs=* Rg
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  \   <bang>0 ? fzf#vim#with_preview('up:60%')
+  \           : fzf#vim#with_preview('right:50%:hidden', '?'),
+ :\   <bang>0)
