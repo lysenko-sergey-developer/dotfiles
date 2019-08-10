@@ -226,6 +226,9 @@ colors:
 # Colors (Dracula)
 #colors:
   # Default colors
+  # Colors (Dracula)
+  # colors:
+  # Default colors
   primary:
     background: '0x282a36'
     foreground: '0xf8f8f2'
@@ -393,10 +396,9 @@ live_config_reload: true
 #   - (macOS) /bin/bash --login
 #   - (Linux) user login shell
 #   - (Windows) powershell
-#shell:
-#  program: /bin/fish
-#  args:
-#    - --login
+shell:
+  program: /usr/local/bin/fish
+  # args: - -login
 
 # Startup directory
 #
