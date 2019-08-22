@@ -37,6 +37,9 @@ set history=500
 filetype plugin on
 filetype indent on
 
+" Set spaces as dots
+set list
+
 " Set to auto read when a file is changed from the outside
 set autoread
 
@@ -93,7 +96,27 @@ Plug 'dracula/vim', { 'as': 'dracula' }
 " Use release branch
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " All greps
-" Plug 'vim-scripts/grep.vim'
+Plug 'vim-scripts/grep.vim'
+
+" Vim-airline
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" nerdtree-git
+Plug 'xuyuanp/nerdtree-git-plugin'
+
+" js syntax support
+Plug 'pangloss/vim-javascript'
+Plug 'mxw/vim-jsx'
+
+" JSON support
+Plug 'elzr/vim-json'
+
+" Linters and formatter
+Plug 'eslint/eslint'
+Plug 'prettier/prettier'
+Plug 'prettier/vim-prettier'
+
 
 " Initialize plugin system
 call plug#end()
@@ -191,7 +214,7 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme desert
+    colorscheme dracula 
 catch
 endtry
 
@@ -444,6 +467,7 @@ noremap <Right> <Nop>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Disable arrows keys
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+inoremap <Esc> <Esc>:PrettierAsync<CR>
 inoremap <Esc> <Esc>:w<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FZF
