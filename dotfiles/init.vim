@@ -92,7 +92,10 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " Unmanaged plugin (manually installed and updated)
 Plug '~/my-prototype-plugin'
 " Dracula Theme
-Plug 'dracula/vim', { 'as': 'dracula' }
+" Plug 'dracula/vim', { 'as': 'dracula' }
+" Onehalf Theme
+Plug 'sonph/onehalf', {'rtp': 'vim/'}
+
 " Use release branch
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " All greps
@@ -120,6 +123,8 @@ Plug 'prettier/vim-prettier'
 " Denite
 Plug 'shougo/denite.nvim'
 
+" Syntastic
+" Plug 'vim-syntastic/syntastic'
 
 
 " Initialize plugin system
@@ -205,7 +210,6 @@ endif
 " Add a bit extra margin to the left
 set foldcolumn=1
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -218,12 +222,17 @@ if $COLORTERM == 'gnome-terminal'
 endif
 
 try
-    colorscheme dracula 
+    colorscheme onehalfdark
 catch
 endtry
 
-set background=dark
+"Set ailine helfdark
+let g:airline_theme='onehalfdark'
 
+" set background=dark
+
+syntax on
+set t_Co=256
 " Set extra options when running in GUI mode
 if has("gui_running")
     set guioptions-=T
@@ -260,6 +269,8 @@ set smarttab
 " 1 tab == 2 spaces
 set shiftwidth=2
 set tabstop=2
+set softtabstop=2
+set expandtab
 
 " Linebreak on 500 characters
 set lbr
@@ -490,7 +501,26 @@ noremap <C-n> :tabnew<Cr>
 " NERDTree block
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 noremap <C-b> :NERDTreeToggle<Cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree show hidden files
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let NERDTreeShowHidden=1
 " Wrap in try/catch to avoid errors on initial install before plugin is available
+
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Setup Syntastic lint
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" set statusline+=%#warningmsg#
+" set statusline+=%{SyntasticStatuslineFlag()}
+" set statusline+=%*
+" let g:syntastic_always_populate_loc_list = 1
+" let g:syntastic_auto_loc_list = 1
+" let g:syntastic_check_on_open = 1
+" let g:syntastic_check_on_wq = 0
+" let g:syntastic_javascript_checkers = ['eslint']
+" let g:syntastic_javascript_eslint_exe = 'npm run lint --'
+
 try
 " === Denite setup ==="
 " Use ripgrep for searching current directory for files
