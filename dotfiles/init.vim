@@ -98,6 +98,8 @@ Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 " Use release branch
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Ale
+Plug 'dense-analysis/ale'
 " All greps
 Plug 'vim-scripts/grep.vim'
 
@@ -200,6 +202,8 @@ set noerrorbells
 set novisualbell
 set t_vb=
 set tm=500
+
+set clipboard=unnamed
 
 " Properly disable sound on errors on MacVim
 if has("gui_macvim")
@@ -521,6 +525,16 @@ let NERDTreeShowHidden=1
 " let g:syntastic_javascript_checkers = ['eslint']
 " let g:syntastic_javascript_eslint_exe = 'npm run lint --'
 
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Ale setup
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:ale_sign_error = '❌'
+let g:ale_sign_warning = '⚠'
+let g:alex_fixers = {
+      \ 'javascript': ['eslint']
+      \}
+let g:ale_fix_on_save = 1
+
 try
 " === Denite setup ==="
 " Use ripgrep for searching current directory for files
@@ -594,7 +608,7 @@ catch
   echo 'Denite not installed. It should work after running :PlugInstall'
 endtry
 
-" === Coc.nvim === "
+"=== Coc.nvim === "
 " use <tab> for trigger completion and navigate to next complete item
 function! s:check_back_space() abort
   let col = col('.') - 1
@@ -607,7 +621,7 @@ inoremap <silent><expr> <TAB>
       \ coc#refresh()
 
 "Close preview window when completion is done.
-autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
+" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 " === Denite shorcuts === "
 "   ;         - Browser currently open buffers
