@@ -50,9 +50,9 @@ let mapleader = ","
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file 
+" :W sudo saves the file
 " (useful for handling the permission-denied error)
-command W w !sudo tee % > /dev/null
+" command W w !sudo tee % > /dev/null
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
@@ -92,12 +92,25 @@ Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 " Unmanaged plugin (manually installed and updated)
 Plug '~/my-prototype-plugin'
 " Dracula Theme
-" Plug 'dracula/vim', { 'as': 'dracula' }
+"Plug 'dracula/vim', { 'as': 'dracula' }
 " Onehalf Theme
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
 " Use release branch
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Youcompletme autocomlet
+" Plug 'valloric/youcompleteme'
+function! BuildYCM(info)
+  " info is a dictionary with 3 fields
+  " - name:   name of the plugin
+  " - status: 'installed', 'updated', or 'unchanged'
+  " - force:  set on PlugInstall! or PlugUpdate!
+  if a:info.status == 'installed' || a:info.force
+    !./install.py
+  endif
+endfunction
+
+Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
 " Ale
 Plug 'dense-analysis/ale'
 " All greps
@@ -127,6 +140,10 @@ Plug 'shougo/denite.nvim'
 
 " Syntastic
 " Plug 'vim-syntastic/syntastic'
+"
+
+" Vim go
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 
 
 " Initialize plugin system
@@ -135,7 +152,7 @@ call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Shell
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set shell=/usr/bin/fish
+set shell=/bin/zsh
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => VIM user interface
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -242,16 +259,14 @@ if has("gui_running")
     set guioptions-=T
     set guioptions-=e
     set t_Co=256
-    set guitablabel=%M\ %t
+    " set guitablabel=%M\ %t
 endif
-
+set listchars=tab:→\ 
 " Set utf8 as standard encoding and en_US as the standard language
-set encoding=utf8
+" set encoding=utf8
 
 " Use Unix as the standard file type
 set ffs=unix,dos,mac
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Files, backups and undo
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -259,8 +274,6 @@ set ffs=unix,dos,mac
 set nobackup
 set nowb
 set noswapfile
-
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -283,7 +296,16 @@ set tw=500
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Font
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set guifont=Monospace\ h20
 
+" Enable syntax highlighting
+syntax enable 
+
+"Close preview window when completion is done.
+" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
 
 """"""""""""""""""""""""""""""
 " => Visual mode related
@@ -489,6 +511,11 @@ noremap <Right> <Nop>
 inoremap <Esc> <Esc>:PrettierSync<CR>
 inoremap <Esc> <Esc>:w<CR>
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable Folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set foldmethod=syntax
+set foldlevelstart=999
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " FZF
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 noremap <C-p> :FZF<Cr>
@@ -511,7 +538,6 @@ noremap <C-b> :NERDTreeToggle<Cr>
 let NERDTreeShowHidden=1
 " Wrap in try/catch to avoid errors on initial install before plugin is available
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Setup Syntastic lint
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -528,9 +554,9 @@ let NERDTreeShowHidden=1
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Ale setup
 """"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_sign_error = '❌'
-let g:ale_sign_warning = '⚠'
-let g:alex_fixers = {
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '>'
+let g:ale_fixers = {
       \ 'javascript': ['eslint']
       \}
 let g:ale_fix_on_save = 1
@@ -583,7 +609,7 @@ let s:denite_options = {'default' : {
 \ 'start_filter': 1,
 \ 'auto_resize': 1,
 \ 'source_names': 'short',
-\ 'prompt': 'λ:',
+\ 'prompt': '?:',
 \ 'statusline': 0,
 \ 'highlight_matched_char': 'WildMenu',
 \ 'highlight_matched_range': 'Visual',
@@ -622,7 +648,6 @@ inoremap <silent><expr> <TAB>
 
 "Close preview window when completion is done.
 " autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-
 " === Denite shorcuts === "
 "   ;         - Browser currently open buffers
 "   <leader>t - Browse list of files in current directory
@@ -672,3 +697,8 @@ function! s:denite_my_settings() abort
   nnoremap <silent><buffer><expr> <C-o>
   \ denite#do_map('open_filter_buffer')
 endfunction
+
+" Autoclose for peview window
+let g:ycm_autoclose_preview_window_after_insertion = 1
+
+" Refacroing
