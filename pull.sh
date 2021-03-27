@@ -12,8 +12,3 @@ cp ~/.config/nvim/init.vim init.vim
 cp ~/.config/alacritty/alacritty.yml alacritty.yml
 cp ~/.tmux.conf .tmux.conf
 cp ~/.zshrc .zshrc
-
-# cp init.vim ~/.config/nvim/init.vim
-# cp alacritty.yml ~/.config/alacritty/alacritty.yml
-# cp tmux.conf ~/.tmux.conf
-
