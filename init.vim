@@ -1,6 +1,6 @@
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Maintainer: 
-"       Amir Salihefendic — @amix3k
+"       Sergey Lysenko @lysenko-sergei-developer
 "
 " Awesome_version:
 "       Get this config, nice color schemes and lots of plugins!
@@ -44,15 +44,11 @@ set list
 set autoread
 
 " With a map leader it's possible to do extra key combinations
-" like <leader>w saves the current file
 let mapleader = ","
 
 " Fast saving
 nmap <leader>w :w!<cr>
 
-" :W sudo saves the file
-" (useful for handling the permission-denied error)
-" command W w !sudo tee % > /dev/null
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Plugins
@@ -67,65 +63,24 @@ call plug#begin('~/.vim/plugged')
 " Shorthand notation; fetches https://github.com/junegunn/vim-easy-align
 Plug 'junegunn/vim-easy-align'
 
-" Any valid git URL is allowed
-Plug 'https://github.com/junegunn/vim-github-dashboard.git'
-
-" Multiple Plug commands can be written in a single line using | separators
-Plug 'SirVer/ultisnips' | Plug 'honza/vim-snippets'
-
 " On-demand loading
 Plug 'scrooloose/nerdtree', { 'on':  'NERDTreeToggle' }
-Plug 'tpope/vim-fireplace', { 'for': 'clojure' }
+Plug 'xuyuanp/nerdtree-git-plugin'
 
-" Using a non-master branch
-Plug 'rdnetto/YCM-Generator', { 'branch': 'stable' }
-
-" Using a tagged release; wildcard allowed (requires git 1.9.2 or above)
-Plug 'fatih/vim-go', { 'tag': '*' }
-
-" Plugin options
-Plug 'nsf/gocode', { 'tag': 'v.20150303', 'rtp': 'vim' }
-
-" Plugin outside ~/.vim/plugged with post-update hook
+" FZF Plugin outside ~/.vim/plugged with post-update hook
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 
-" Unmanaged plugin (manually installed and updated)
-Plug '~/my-prototype-plugin'
-" Dracula Theme
-"Plug 'dracula/vim', { 'as': 'dracula' }
 " Onehalf Theme
 Plug 'sonph/onehalf', {'rtp': 'vim/'}
 
-" Use release branch
-" Plug 'neoclide/coc.nvim', {'branch': 'release'}
-" Youcompletme autocomlet
-" Plug 'valloric/youcompleteme'
-function! BuildYCM(info)
-  " info is a dictionary with 3 fields
-  " - name:   name of the plugin
-  " - status: 'installed', 'updated', or 'unchanged'
-  " - force:  set on PlugInstall! or PlugUpdate!
-  if a:info.status == 'installed' || a:info.force
-    !./install.py
-  endif
-endfunction
+" COC autocomplete
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-Plug 'Valloric/YouCompleteMe', { 'do': function('BuildYCM') }
-" Ale
-Plug 'dense-analysis/ale'
-" All greps
-Plug 'vim-scripts/grep.vim'
-
-" Vim-airline
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-
-" nerdtree-git
-Plug 'xuyuanp/nerdtree-git-plugin'
-
-" js syntax support
+" js/jsx/ts/tsx syntax support
 Plug 'pangloss/vim-javascript'
 Plug 'mxw/vim-jsx'
+Plug 'leafgarland/typescript-vim'
+Plug 'peitalin/vim-jsx-typescript'
 
 " JSON support
 Plug 'elzr/vim-json'
@@ -135,16 +90,27 @@ Plug 'eslint/eslint'
 Plug 'prettier/prettier'
 Plug 'prettier/vim-prettier'
 
-" Denite
-Plug 'shougo/denite.nvim'
+" Ack fuzzy
+Plug 'mileszs/ack.vim'
 
-" Syntastic
-" Plug 'vim-syntastic/syntastic'
-"
+" Clojure
+Plug 'luochen1990/rainbow'
+Plug 'tpope/vim-fireplace'
+Plug 'bhurlow/vim-parinfer'
+Plug 'clojure-vim/async-clj-omni'
+Plug 'guns/vim-sexp'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
-" Vim go
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+" Git
+Plug 'tpope/vim-fugitive'
 
+" Enhance Node.vim
+Plug 'moll/vim-node'
+
+" Buftabline
+Plug 'ap/vim-buftabline'
 
 " Initialize plugin system
 call plug#end()
@@ -185,7 +151,7 @@ set ruler
 set cmdheight=2
 
 " A buffer becomes hidden when it is abandoned
-set hid
+set hidden
 
 " Configure backspace so it acts as it should act
 set backspace=eol,start,indent
@@ -222,46 +188,45 @@ set tm=500
 
 set clipboard=unnamed
 
-" Properly disable sound on errors on MacVim
-if has("gui_macvim")
-    autocmd GUIEnter * set vb t_vb=
-endif
-
-
-" Add a bit extra margin to the left
-set foldcolumn=1
+" Disable folding at all
+set nofoldenable
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Colors and Fonts
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set guifont=Jetbrains_Mono_Regular\ h20
+" Enable theming support
+if (has("termguicolors"))
+ set termguicolors
+endif
 " Enable syntax highlighting
 syntax enable 
-
-" Enable 256 colors palette in Gnome Terminal
-if $COLORTERM == 'gnome-terminal'
-    set t_Co=256
-endif
-
-try
-    colorscheme onehalfdark
-catch
-endtry
-
-"Set ailine helfdark
-let g:airline_theme='onehalfdark'
-
-" set background=dark
-
 syntax on
+set guioptions-=T
+set guioptions-=e
 set t_Co=256
-" Set extra options when running in GUI mode
-if has("gui_running")
-    set guioptions-=T
-    set guioptions-=e
-    set t_Co=256
-    " set guitablabel=%M\ %t
+set cursorline
+colorscheme onehalfdark
+if exists('+termguicolors')
+  let &t_8f = "\<Esc>[38;2;%lu;%lu;%lum"
+  let &t_8b = "\<Esc>[48;2;%lu;%lu;%lum"
+  set termguicolors
 endif
-set listchars=tab:→\ 
+
+" Enable syntax highlighting for tsx
+" set filetypes as typescriptreact
+autocmd BufNewFile,BufRead *.tsx,*.jsx set filetype=typescriptreact
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Bufers with buftabline
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let g:buftabline_show=2
+let g:buftabline_indicators=1
+" TODO: Adds my BufTabLine Colors
+" ----------------------------------------------------
+" call s:HL('BufTabLineActive', s:colors.foreground, s:colors.background) 
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set listchars=tab:?\ 
 " Set utf8 as standard encoding and en_US as the standard language
 " set encoding=utf8
 
@@ -274,6 +239,9 @@ set ffs=unix,dos,mac
 set nobackup
 set nowb
 set noswapfile
+" Enable auto-save
+au FocusLost * silent! wa
+set autowriteall
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Text, tab and indent related
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -296,17 +264,6 @@ set tw=500
 set ai "Auto indent
 set si "Smart indent
 set wrap "Wrap lines
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Font
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set guifont=Monospace\ h20
-
-" Enable syntax highlighting
-syntax enable 
-
-"Close preview window when completion is done.
-" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-
 """"""""""""""""""""""""""""""
 " => Visual mode related
 """"""""""""""""""""""""""""""
@@ -314,7 +271,6 @@ syntax enable
 " Super useful! From an idea by Michael Naumann
 vnoremap <silent> * :<C-u>call VisualSelection('', '')<CR>/<C-R>=@/<CR><CR>
 vnoremap <silent> # :<C-u>call VisualSelection('', '')<CR>?<C-R>=@/<CR><CR>
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Moving around, tabs, windows and buffers
@@ -332,31 +288,8 @@ map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 
-" Close the current buffer
-map <leader>bd :Bclose<cr>:tabclose<cr>gT
-
 " Close all the buffers
 map <leader>ba :bufdo bd<cr>
-
-map <leader>l :bnext<cr>
-map <leader>h :bprevious<cr>
-
-" Useful mappings for managing tabs
-map <leader>tn :tabnew<cr>
-map <leader>to :tabonly<cr>
-map <leader>tc :tabclose<cr>
-map <leader>tm :tabmove 
-map <leader>t<leader> :tabnext 
-
-" Let 'tl' toggle between this and the last accessed tab
-let g:lasttab = 1
-nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
-au TabLeave * let g:lasttab = tabpagenr()
-
-
-" Opens a new tab with the current buffer's path
-" Super useful when editing files in the same directory
-map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
 
 " Switch CWD to the directory of the open buffer
 map <leader>cd :cd %:p:h<cr>:pwd<cr>
@@ -381,7 +314,6 @@ set laststatus=2
 " Format the status line
 set statusline=\ %{HasPaste()}%F%m%r%h\ %w\ \ CWD:\ %r%{getcwd()}%h\ \ \ Line:\ %l\ \ Column:\ %c
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Editing mappings
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -400,20 +332,11 @@ if has("mac") || has("macunix")
   vmap <D-j> <M-j>
   vmap <D-k> <M-k>
 endif
-
-" Delete trailing white space on save, useful for some filetypes ;)
-fun! CleanExtraSpaces()
-    let save_cursor = getpos(".")
-    let old_query = getreg('/')
-    silent! %s/\s\+$//e
-    call setpos('.', save_cursor)
-    call setreg('/', old_query)
-endfun
-
-if has("autocmd")
-    autocmd BufWritePre *.txt,*.js,*.py,*.wiki,*.sh,*.coffee :call CleanExtraSpaces()
-endif
-
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Linters and formatters
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+command! -nargs=0 Prettier :CocCommand prettier.formatFile
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Spell checking
@@ -427,23 +350,80 @@ map <leader>sp [s
 map <leader>sa zg
 map <leader>s? z=
 
-
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Misc
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " Remove the Windows ^M - when the encodings gets messed up
 noremap <Leader>m mmHmt:%s/<C-V><cr>//ge<cr>'tzt'm
 
-" Quickly open a buffer for scribble
-map <leader>q :e ~/buffer<cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Disable arrows keys
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <Up> <Nop>
+noremap <Down> <Nop>
+noremap <Left> <Nop>
+noremap <Right> <Nop>
 
-" Quickly open a markdown buffer for scribble
-map <leader>x :e ~/buffer.md<cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable Folding
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set foldmethod=syntax
+set foldlevelstart=999
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" FZF
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+let $FZF_DEFAULT_COMMAND = 'rg --files --hidden'
+noremap <C-p> :FZF<Cr>
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Full text fuzzy search
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Backslash invokes ack.vim
+nnoremap \ :Ack<SPACE>
+noremap <silent><C-h> :Ack <C-R><C-W><CR><CR>
+" Prefer rg > ag > ack
+if executable('rg')
+    let g:ackprg = 'rg -S --no-heading --vimgrep'
+elseif executable('ag')
+    let g:ackprg = 'ag --vimgrep'
+endif
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Fast switch to buffers
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+noremap <C-n> :enew<cr> 
+noremap <C-k> :bnext<Cr>
+noremap <C-j> :bprevious<Cr>
+noremap <C-a> :ball<Cr>
+noremap <C-q> :Bclose<cr>:tabclose<cr>gT
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" NERDTree block
+noremap <C-b> :NERDTreeToggle<Cr>
+" NERDTree show hidden files
+let NERDTreeShowHidden=1
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" COC
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" use <CR> for complete trigger
+inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm() : "\<C-g>u\<CR>"
 
-" Toggle paste mode on and off
-map <leader>pp :setlocal paste!<cr>
+" use <tab> for trigger completion and navigate to the next complete item
+function! s:check_back_space() abort
+  let col = col('.') - 1
+  return !col || getline('.')[col - 1]  =~ '\s'
+endfunction
 
-
+inoremap <silent><expr> <Tab>
+      \ pumvisible() ? "\<C-n>" :
+      \ <SID>check_back_space() ? "\<Tab>" :
+      \ coc#refresh()
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Clojure
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" Enable Rainbow
+let g:rainbow_active = 1 "set to 0 if you want to enable it later via :RainbowToggle
+" Enable sexp for clojure
+let g:sexp_enable_insert_mode_mappings = 1
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 " => Helper functions
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -476,10 +456,12 @@ function! <SID>BufcloseCloseIt()
     endif
 endfunction
 
+" Helper for VisualSelection
 function! CmdLine(str)
     call feedkeys(":" . a:str)
 endfunction 
 
+" Cool thing for use * or # for finding text in in file
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
     execute "normal! vgvy"
@@ -496,209 +478,3 @@ function! VisualSelection(direction, extra_filter) range
     let @/ = l:pattern
     let @" = l:saved_reg
 endfunction
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Disable arrows keys
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <Up> <Nop>
-noremap <Down> <Nop>
-noremap <Left> <Nop>
-noremap <Right> <Nop>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Disable arrows keys
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-inoremap <Esc> <Esc>:PrettierSync<CR>
-inoremap <Esc> <Esc>:w<CR>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Enable Folding
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set foldmethod=syntax
-set foldlevelstart=999
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" FZF
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <C-p> :FZF<Cr>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Fast switch to tab
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <C-j> :tabprevious<Cr>
-noremap <C-k> :tabnext<Cr>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Create new tab
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <C-n> :tabnew<Cr>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NERDTree block
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-noremap <C-b> :NERDTreeToggle<Cr>
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" NERDTree show hidden files
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let NERDTreeShowHidden=1
-" Wrap in try/catch to avoid errors on initial install before plugin is available
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Setup Syntastic lint
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" set statusline+=%#warningmsg#
-" set statusline+=%{SyntasticStatuslineFlag()}
-" set statusline+=%*
-" let g:syntastic_always_populate_loc_list = 1
-" let g:syntastic_auto_loc_list = 1
-" let g:syntastic_check_on_open = 1
-" let g:syntastic_check_on_wq = 0
-" let g:syntastic_javascript_checkers = ['eslint']
-" let g:syntastic_javascript_eslint_exe = 'npm run lint --'
-
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" Ale setup
-""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-let g:ale_sign_error = '>>'
-let g:ale_sign_warning = '>'
-let g:ale_fixers = {
-      \ 'javascript': ['eslint']
-      \}
-let g:ale_fix_on_save = 1
-
-try
-" === Denite setup ==="
-" Use ripgrep for searching current directory for files
-" By default, ripgrep will respect rules in .gitignore
-"   --files: Print each file that would be searched (but don't search)
-"   --glob:  Include or exclues files for searching that match the given glob
-"            (aka ignore .git files)
-"
-call denite#custom#var('file/rec', 'command', ['rg', '--files', '--glob', '!.git'])
-
-" Use ripgrep in place of "grep"
-call denite#custom#var('grep', 'command', ['rg'])
-
-" Custom options for ripgrep
-"   --vimgrep:  Show results with every match on it's own line
-"   --hidden:   Search hidden directories and files
-"   --heading:  Show the file name above clusters of matches from each file
-"   --S:        Search case insensitively if the pattern is all lowercase
-call denite#custom#var('grep', 'default_opts', ['--hidden', '--vimgrep', '--heading', '-S'])
-
-" Recommended defaults for ripgrep via Denite docs
-call denite#custom#var('grep', 'recursive_opts', [])
-call denite#custom#var('grep', 'pattern_opt', ['--regexp'])
-call denite#custom#var('grep', 'separator', ['--'])
-call denite#custom#var('grep', 'final_opts', [])
-
-" Remove date from buffer list
-call denite#custom#var('buffer', 'date_format', '')
-
-" Open file commands
-call denite#custom#map('insert,normal', "<C-t>", '<denite:do_action:tabopen>')
-call denite#custom#map('insert,normal', "<C-v>", '<denite:do_action:vsplit>')
-call denite#custom#map('insert,normal', "<C-h>", '<denite:do_action:split>')
-
-" Custom options for Denite
-"   auto_resize             - Auto resize the Denite window height automatically.
-"   prompt                  - Customize denite prompt
-"   direction               - Specify Denite window direction as directly below current pane
-"   winminheight            - Specify min height for Denite window
-"   highlight_mode_insert   - Specify h1-CursorLine in insert mode
-"   prompt_highlight        - Specify color of prompt
-"   highlight_matched_char  - Matched characters highlight
-"   highlight_matched_range - matched range highlight
-let s:denite_options = {'default' : {
-\ 'split': 'floating',
-\ 'start_filter': 1,
-\ 'auto_resize': 1,
-\ 'source_names': 'short',
-\ 'prompt': '?:',
-\ 'statusline': 0,
-\ 'highlight_matched_char': 'WildMenu',
-\ 'highlight_matched_range': 'Visual',
-\ 'highlight_window_background': 'Visual',
-\ 'highlight_filter_background': 'StatusLine',
-\ 'highlight_prompt': 'StatusLine',
-\ 'winrow': 1,
-\ 'vertical_preview': 1
-\ }}
-
-" Loop through denite options and enable them
-function! s:profile(opts) abort
-  for l:fname in keys(a:opts)
-    for l:dopt in keys(a:opts[l:fname])
-      call denite#custom#option(l:fname, l:dopt, a:opts[l:fname][l:dopt])
-    endfor
-  endfor
-endfunction
-
-call s:profile(s:denite_options)
-catch
-  echo 'Denite not installed. It should work after running :PlugInstall'
-endtry
-
-"=== Coc.nvim === "
-" use <tab> for trigger completion and navigate to next complete item
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~ '\s'
-endfunction
-
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-
-"Close preview window when completion is done.
-" autocmd! CompleteDone * if pumvisible() == 0 | pclose | endif
-" === Denite shorcuts === "
-"   ;         - Browser currently open buffers
-"   <leader>t - Browse list of files in current directory
-"   <leader>g - Search current directory for occurences of given term and close window if no results
-"   <leader>j - Search current directory for occurences of word under cursor
-nmap ; :Denite buffer<CR>
-nmap <leader>t :DeniteProjectDir file/rec<CR>
-nnoremap <leader>g :<C-u>Denite grep:. -no-empty<CR>
-nnoremap <leader>j :<C-u>DeniteCursorWord grep:.<CR>
-
-" Define mappings while in 'filter' mode
-"   <C-o>         - Switch to normal mode inside of search results
-"   <Esc>         - Exit denite window in any mode
-"   <CR>          - Open currently selected file in any mode
-autocmd FileType denite-filter call s:denite_filter_my_settings()
-function! s:denite_filter_my_settings() abort
-  imap <silent><buffer> <C-o>
-  \ <Plug>(denite_filter_quit)
-  inoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  inoremap <silent><buffer><expr> <CR>
-  \ denite#do_map('do_action')
-endfunction
-
-" Define mappings while in denite window
-"   <CR>        - Opens currently selected file
-"   q or <Esc>  - Quit Denite window
-"   d           - Delete currenly selected file
-"   p           - Preview currently selected file
-"   <C-o> or i  - Switch to insert mode inside of filter prompt
-autocmd FileType denite call s:denite_my_settings()
-function! s:denite_my_settings() abort
-  nnoremap <silent><buffer><expr> <CR>
-  \ denite#do_map('do_action')
-  nnoremap <silent><buffer><expr> q
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> <Esc>
-  \ denite#do_map('quit')
-  nnoremap <silent><buffer><expr> d
-  \ denite#do_map('do_action', 'delete')
-  nnoremap <silent><buffer><expr> p
-  \ denite#do_map('do_action', 'preview')
-  nnoremap <silent><buffer><expr> i
-  \ denite#do_map('open_filter_buffer')
-  nnoremap <silent><buffer><expr> <C-o>
-  \ denite#do_map('open_filter_buffer')
-endfunction
-
-" Autoclose for peview window
-let g:ycm_autoclose_preview_window_after_insertion = 1
-
-" Refacroing
